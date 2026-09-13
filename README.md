@@ -1,103 +1,104 @@
-# Password Management System
+# Command-line Password Generator
 
-یک برنامهٔ خط فرمان ساده برای ایجاد و مدیریت کاربران و گذرواژه‌ها با Python و SQLite.
+A simple Python-based command-line application for managing users and generating random passwords in a local SQLite database.
 
-> **هشدار امنیتی:** این پروژه گذرواژه‌ها را به‌صورت متن ساده در SQLite ذخیره و هنگام
-> جست‌وجو یا نمایش فهرست چاپ می‌کند. برای استفادهٔ واقعی، باید از هش امن گذرواژه
-> (مانند Argon2 یا bcrypt)، دریافت مخفی ورودی و کنترل دسترسی استفاده شود.
+## Overview
 
-## قابلیت‌ها
+This project allows you to:
 
-- ایجاد کاربر با نام و گذرواژهٔ تصادفی
-- جست‌وجوی کاربر بر اساس نام
-- تغییر نام یا گذرواژهٔ کاربر
-- حذف کاربر
-- نمایش همهٔ کاربران
-- ایجاد خودکار جدول `users` در نخستین اجرا
-- نمایش پیام‌های رنگی در رابط خط فرمان
+- Create a user with a generated password
+- Search for a user by name
+- Update a user's name
+- Update a user's password
+- Delete a user
+- List all users
+- Automatically create the SQLite database and `users` table on first run
 
-## پیش‌نیازها
+The app is built with Python and uses the SQLite database file `Userdatabase.db`.
 
-- Python 3.10 یا جدیدتر
-- بستهٔ `colorama`
+## Important Security Notice
 
-نصب وابستگی:
+This project stores passwords in plain text in the SQLite database and displays them in some output paths. That is intentionally simple for learning/demo purposes only.
+
+For real-world use, you should:
+
+- Hash passwords using a secure algorithm such as bcrypt or Argon2
+- Avoid printing raw passwords in logs or console output
+- Use secret input handling for password entry
+- Add authentication and authorization controls
+
+## Requirements
+
+- Python 3.10+
+- `colorama`
+
+Install dependencies:
 
 ```bash
-python -m pip install colorama
+python -m pip install -r requirements.txt
 ```
 
-## اجرا
-
-از ریشهٔ پروژه اجرا کنید:
-
-```bash
-python -m src.main
-```
-
-در نخستین اجرا، فایل `Userdatabase.db` و جدول `users` ساخته می‌شوند. منوی برنامه
-گزینه‌های ۱ تا ۷ را ارائه می‌دهد؛ گزینهٔ ۷ برنامه را می‌بندد.
-
-## ساختار پروژه
+## Project Structure
 
 ```text
 .
 ├── README.md
 ├── .gitignore
 ├── requirements.txt
-├── .vscode/settings.json
+├── .vscode/
+│   └── settings.json
 ├── Userdatabase.db
 └── src/
     ├── main.py
-    ├── database/concetion.py
-    ├── logic/generator.py
-    ├── logic/id_gen.py
-    ├── logic/validation.py
-    ├── queries/all_query.py
-    └── services/user_service.py
+    ├── test.ipynb
+    ├── database/
+    │   └── concetion.py
+    ├── logic/
+    │   ├── generator.py
+    │   ├── id_gen.py
+    │   └── validation.py
+    ├── queries/
+    │   └── all_query.py
+    └── services/
+        └── user_service.py
 ```
 
-### توضیح فایل‌ها
+## Running the Application
 
-- **`src/main.py`**: نقطهٔ ورود برنامه، دریافت انتخاب کاربر، مدیریت اتصال SQLite
-  و اجرای عملیات منو.
-- **`src/services/user_service.py`**: لایهٔ سرویس و رابط کاربری؛ عملیات پایگاه
-  داده را به پیام‌های قابل فهم برای کاربر تبدیل می‌کند.
-- **`src/queries/all_query.py`**: کوئری‌های SQLite برای درج، خواندن، ویرایش و
-  حذف رکوردهای جدول `users`. مقادیر ورودی با پارامترهای SQLite ارسال می‌شوند.
-- **`src/database/concetion.py`**: ساخت فایل پایگاه داده و جدول `users` در صورت
-  نبودن آن. نام فایل فعلی `concetion.py` عمداً مطابق ساختار موجود پروژه حفظ شده است.
-- **`src/logic/generator.py`**: تولید گذرواژهٔ تصادفی با حروف انگلیسی و اعداد.
-- **`src/logic/validation.py`**: اعتبارسنجی نام و طول گذرواژه. این کلاس در مسیر
-  فعلی منو هنوز به‌صورت خودکار فراخوانی نمی‌شود.
-- **`src/logic/id_gen.py`**: تولیدکنندهٔ سادهٔ شناسهٔ افزایشی در حافظه؛ شناسهٔ
-  اصلی کاربران را SQLite با `AUTOINCREMENT` تولید می‌کند.
-- **`src/test.ipynb`**: نوت‌بوک آزمایشی فعلی که در حال حاضر سلول اجرایی ندارد.
-- **`.vscode/settings.json`**: تنظیمات محیط Python در VS Code برای انتخاب مدیر
-  محیط و بسته.
-- **`Userdatabase.db`**: پایگاه دادهٔ محلی SQLite شامل جدول کاربران؛ به دلیل
-  داشتن اطلاعات حساس نباید commit شود.
-- **`src/app.db`**: فایل SQLite محلی موجود در پوشهٔ `src`؛ این فایل نیز دادهٔ
-  اجرایی/محلی است و طبق `.gitignore` نباید commit شود.
+From the project root, run:
 
-## مدل داده
+```bash
+python -m src.main
+```
 
-جدول `users` در زمان اتصال ساخته می‌شود:
+On first run, the program creates the SQLite database and the `users` table automatically.
 
-| ستون | نوع | توضیح |
+The menu offers the following choices:
+
+1. Create user
+2. Search user
+3. Update user name
+4. Update user password
+5. Delete user
+6. List all users
+7. Exit
+
+## Database Schema
+
+The app creates a `users` table with the following structure:
+
+| Column | Type | Description |
 | --- | --- | --- |
-| `id` | `INTEGER` | کلید اصلی افزایشی |
-| `name` | `TEXT` | نام کاربر، اجباری |
-| `password` | `TEXT` | گذرواژه، اجباری و یکتا |
+| `id` | `INTEGER` | Auto-increment primary key |
+| `name` | `TEXT` | User name |
+| `password` | `TEXT` | Password value |
 
-## محدودیت‌های فعلی
+## Notes
 
-- ورودی نامعتبر یا انتخاب خارج از بازهٔ ۱ تا ۷ مدیریت کامل نمی‌شود.
-- خطاهای تبدیل ورودی به عدد می‌توانند برنامه را متوقف کنند.
-- گذرواژه‌ها متن ساده هستند و تولیدکننده از `random` غیررمزنگاری استفاده می‌کند.
-- مسیر دیتابیس نسبی است و از پوشه‌ای که فرمان در آن اجرا می‌شود محاسبه می‌شود.
+- The database file is stored locally as `Userdatabase.db`.
+- Password generation uses Python's `random` module and alphabet characters plus digits.
+- The app is intended as a basic demonstration project rather than a production security system.
 
-## وضعیت مستندات
+## License
 
-این README نمای کلی پروژه، قرارداد فایل‌ها و روش اجرا را مستند می‌کند. برای
-جزئیات هر تابع، docstring همان ماژول مرجع نزدیک به کد است.
+This project does not currently include a license file. If you plan to publish or share it, consider adding an open-source license appropriate for your use case.
